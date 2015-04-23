@@ -40,9 +40,9 @@ X_val_norm=preprocessing.scale(X_val)
 Y_res=[]
 
 for run in range(9):
-
+	print("Starting run %d"%run)
 ####### read train data and labels
-
+	
 	f=h5py.File('project_data/train.h5',"r")
 	data=f["data"]
 	label=f["label"]
@@ -86,7 +86,7 @@ for run in range(9):
 	    #print(best)
 	    return best
 
-	n_components=500
+	n_components=300
 	print("Extracting the top %d eigenimages from %d images"%(n_components,X_train.shape[0]))
 
 	pca=RandomizedPCA(n_components=n_components, whiten=True).fit(X_train)
@@ -115,4 +115,7 @@ with open('val_res.csv','w') as fp:
     writer=csv.writer(fp,delimiter=',')
     for row in range(len(y_end)):
 	writer.writerow([int(y_end[row])])
+ 
+
+print("All done!")
 		
