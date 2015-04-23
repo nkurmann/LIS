@@ -51,14 +51,16 @@ for run in range(9):
 	Xtemp=[]
 	step=0
 	for row in data[run*3500:run*3500+12000,:]:
-	    print('row=',run,step)
-	    step=step+1
-	    for ind in range(len(row)): 
-		Xtemp.append([float(row[ind])])    
-	    X.append(Xtemp)
-	    Xtemp=[] 
+		if step/1000 == 0:
+			print('row=',run,step)
+	
+		step=step+1
+		for ind in range(len(row)): 
+			Xtemp.append([float(row[ind])])    
+		X.append(Xtemp)
+		Xtemp=[] 
 	for row in label[run*3500:run*3500+12000,:]:
-	    Y.append([float(row[0])])     
+		Y.append([float(row[0])])     
 
 	Xtrain=np.array(X)[:,:,0]
 	Ytrain=np.array(Y)[:,0]
@@ -86,7 +88,7 @@ for run in range(9):
 	    #print(best)
 	    return best
 
-	n_components=300
+	n_components=200
 	print("Extracting the top %d eigenimages from %d images"%(n_components,X_train.shape[0]))
 
 	pca=RandomizedPCA(n_components=n_components, whiten=True).fit(X_train)
