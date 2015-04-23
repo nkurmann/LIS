@@ -21,7 +21,7 @@ from sklearn.decomposition import RandomizedPCA
 from scipy.stats import mode
 ####### read validation data
 
-fval=h5py.File('../LIS/Projekt_3/validate.h5',"r")
+fval=h5py.File('project_data/validate.h5',"r")
 data=fval["data"]
 Xval=[]
 Xtempval=[]
@@ -43,7 +43,7 @@ for run in range(9):
 
 ####### read train data and labels
 
-	f=h5py.File('../LIS/Projekt_3/train.h5',"r")
+	f=h5py.File('project_data/train.h5',"r")
 	data=f["data"]
 	label=f["label"]
 	Y=[]
@@ -111,7 +111,7 @@ for nr in range(yres.shape[1]):
 
 
 	
-with open('../LIS/Projekt_3/val_res.csv','w') as fp:
+with open('val_res.csv','w') as fp:
     writer=csv.writer(fp,delimiter=',')
     for row in range(len(y_end)):
 	writer.writerow([int(y_end[row])])
