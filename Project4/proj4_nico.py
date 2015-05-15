@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[2]:
+# In[1]:
 
 import numpy as np    
 import matplotlib.pylab as plt
@@ -44,11 +44,12 @@ with open(direc+'validate.csv','r') as fin:
         Xval.append(Xtempval)
         Xtempval = []
 X_val=np.array(Xval)
-X_val_norm=preprocessing.scale(X_val)
+#X_val_norm=preprocessing.scale(X_val)
+X_val_norm = X_val
 Y_res=[]
 
 
-# In[32]:
+# In[2]:
 
 ####### read train data and labels
 Y=[]
@@ -59,7 +60,7 @@ maxim = 7000
 with open(direc+'train.csv','r') as fin:
     reader = csv.reader(fin,delimiter=',')
     for row in reader:
-        print('step: ',step)
+        #print('step: ',step)
         step = step+1
         if step == maxim:
             break
@@ -73,55 +74,98 @@ step = 0
 with open(direc+'train_y.csv') as fin:
     reader = csv.reader(fin,delimiter=',')
     for row in reader:
+        #print('step: ',step)
         step = step+1
         if step == maxim:
             break
         Y.append(float(row[0]))
-    Y=np.atleast_2d(Y)
+    #Y=np.atleast_2d(Y)
 
 print('done reading Ytrain')
 Xtrain=np.array(X)
 Ytrain=np.array(Y)
 
 
-# In[33]:
+# In[3]:
 
 Ytrain = np.transpose(Ytrain)
 
 
-# In[35]:
+# In[4]:
 
 print(Ytrain.shape)
 print(Xtrain.shape)
 
 
-# In[36]:
+# In[5]:
 
 ####### define score functions
 import math
 
 def score(truth,pred):
     su = 0
+    labeled = 0
     for i in range(truth.shape[0]):
-        su = su - math.log(max(0.0001,pred[i,truth[i]]))
-    return su/(truth.shape[0])
+        if(truth[i]!=-1):
+            print('true label is: ',truth[i])
+            print('predicted probability is: ',pred[i,truth[i]])
+            su = su - math.log(max(0.0001,pred[i,truth[i]]))
+            labeled = labeled+1
+    if labeled == 0:
+        print('PROBLEM!! DIV BY 0')
+    return su/labeled
     #dif = -log(max(0.0001,pred[truth]))
     #return np.divide(sum(dif))
 
 
-# In[37]:
+# In[6]:
 
-X_norm=preprocessing.scale(Xtrain)
+#X_norm=preprocessing.scale(Xtrain)
+X_norm = Xtrain
 X_train, X_test, Y_train, Y_test = skcv.train_test_split(X_norm,Ytrain,test_size=0.4, random_state=0)
 
 
-# In[39]:
+# In[7]:
 
 #count number of missing labels
 noLabels = [1 for i in Y_train if i==-1]
 labels = [1 for i in Y_train if not i==-1]
 print('unlabeled: ',np.sum(noLabels))
 print('labeled: ',np.sum(labels))
+
+
+# In[8]:
+
+from sklearn.semi_supervised import LabelPropagation as LP
+from sklearn.semi_supervised import LabelSpreading as LS
+
+
+# In[17]:
+
+lspr = LP(gamma = 70)
+lspr.fit(X_norm,Ytrain)
+
+
+# In[15]:
+
+print('nofClasses: ',lspr.classes_)
+
+
+# In[16]:
+
+pred = lspr.predict(X_norm)
+notN = [1 for i in pred if i>0.0]
+print(sum(notN))
+
+
+# In[12]:
+
+Y_pred = lspr.predict_proba(X_test)
+
+
+# In[13]:
+
+print(Y_pred.shape)
 
 
 # In[ ]:
