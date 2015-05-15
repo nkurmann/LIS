@@ -25,7 +25,13 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.decomposition import RandomizedPCA
 from scipy.stats import mode
 
-direc = 'C:/Users/Pragnya/Documents/Studium/Project4/'
+import getpass
+
+if getpass.getuser() == 'Pragnya':
+	direc = 'C:/Users/Pragnya/Documents/GitHub/LIS/Project4/'
+else:
+	direc = ''
+
 ####### read validation data
 Xval=[]
 Xtempval=[]

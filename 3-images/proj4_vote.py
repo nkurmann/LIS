@@ -51,7 +51,7 @@ for run in range(9):
 	Xtemp=[]
 	step=0
 	for row in data[run*3500:run*3500+12000,:]:
-		if step/1000 == 0:
+		if step/100 == 0:
 			print('row=',run,step)
 	
 		step=step+1
